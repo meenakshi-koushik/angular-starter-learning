@@ -24,21 +24,21 @@ jobs:
           context: .
           push: false
           target: start
-          tags: axiix/angular-starter-learning:start
+          tags: meenakshikoushik/angular-starter-learning:start
       - name: Build target
         uses: docker/build-push-action@v2
         with:
           context: .
           push: false
           target: builder
-          tags: axiix/angular-starter-learning:build
+          tags: meenakshikoushik/angular-starter-learning:build
       - name: Build runtime target
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           target: runtime
-          tags: axiix/angular-starter-learning:${{ steps.tag_version.outputs.new_tag }}
+          tags: meenakshikoushik/angular-starter-learning:${{ steps.tag_version.outputs.new_tag }}
       - name: Prepare helm chart
         run: |
           sed -i -e "s/BUILD_VERSION/${{ steps.tag_version.outputs.new_tag }}/g" charts/angular-starter-learning/Chart.yaml
@@ -63,12 +63,12 @@ jobs:
         uses: azure/aks-set-context@v1
         with:
           creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-          resource-group: 'web-viewer-tl-20210713-k8'
-          cluster-name: 'web-viewer-team-learning-20210713-kube'
+          resource-group: 'web-viewer-tl-20211210-cicd'
+          cluster-name: 'web-viewer-team-learning-2021-12-10'
         id: login
       - name: Install Helm
         uses: azure/setup-helm@v1
         id: install
       - name: Deploy app
         run: |
-          helm upgrade --install angular-starter-learning angular-starter-learning/
+          helm upgrade --install angular-starter-learning --namespace group02 --create-namespace angular-starter-learning/
